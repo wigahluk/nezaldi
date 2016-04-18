@@ -1,0 +1,23 @@
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+/.idea/
+atlassian-ide-plugin.xml
+
+# Vi, vim mvim Files
+*.swp
+*.swo
+
+# Mac OS files
+.DS_Store
+
+/nbproject
+/tmp
+/lib
+/test-result
+/logs
+
+# Generated or maanged sources
+generated-sources/
+node_modules/

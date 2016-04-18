@@ -1,0 +1,28 @@
+{
+  "name": "nezaldi",
+  "version": "0.1.0",
+  "description": "Proxy ",
+  "main": "server.js",
+  "scripts": {
+    "start:proxy": "node server.js --conf=e2e.conf.json",
+    "start:dummy": "node dummyServer.js",
+    "start:test": "npm run start:proxy & npm run start:dummy",
+    "start": "node server.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:wigahluk/nezaldi.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "Node",
+    "Proxy"
+  ],
+  "author": "Apigee",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4",
+    "http-proxy": "^1.13.2"
+  }
+}
