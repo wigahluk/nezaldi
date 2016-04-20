@@ -1,4 +1,6 @@
 /* global process */
+'use strict';
+
 // This file is our entry point for Node.js
 const express = require('express');
 const path = require('path');
@@ -11,40 +13,79 @@ loadConf (
         const app = express();
 
         const port = conf.port || 3000;
-        const mode = !!conf.devServerUrl ? 'proxy' : 'static';
 
-        app.all('/*', (req, res) => {
-            req.headers = cleanHeaders(req.headers);
+        const defaultUrl = conf.defaultUrl;
 
-            proxy.web(req, res, {
-                target: getTargetUrl(req, conf)
-            });
-        });
 
-        // It is important to catch any errors from the proxy or the
-        // server will crash. An example of this is connecting to the
-        // server when webpack is bundling
-        proxy.on('error', (error, request, response) => {
-            console.log('Error when invoking external server. URL: ' + request.hostname + request.url);
 
-            response.writeHead(500, { 'Content-Type': 'application/json'});
-            if(error && error.cert && error.cert.raw) {
-                delete error.cert.raw;
+        const rules = conf.rules.map((rule, idx) => {
+            return {
+                regex: new RegExp(rule.path, 'i'),
+                target: rule.target,
+                resetPath: !!rule.resetPath,
+                accept: rule.accept,
+                isStatic: rule.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(rule.target) : false
             }
-            response.end(JSON.stringify(error));
-
         });
 
-        // And run the server
+
+        app.use((req, res, next) => {
+            req.headers = cleanHeaders(req.headers);
+            const match = findMatch(rules, req);
+            req.originalUrl = req.url;
+            if(!match) {
+                console.log('no match, defaulting to', defaultUrl);
+                req.url = '/';
+                proxy.web(req, res, {
+                    target: defaultUrl
+                });
+            } else {
+                let newTarget = match.rule.target;
+                match.match.slice(1).forEach((s, idx) => {
+                    newTarget = newTarget.replace('$' + (idx + 1), s);
+                });
+                let newUrl = req.originalUrl.substr(match.match[0].length);
+                if(newUrl.indexOf('/') !== 0) {
+                    newUrl = '/' + newUrl;
+                }
+                req.url = newUrl;
+                proxy.web(req, res, {
+                    target: newTarget
+                });
+            }
+        });
+        // Run the server
         app.listen(port, function () {
-            console.log('Server running at port %s', port);
+            console.log('[Nezaldi] Server running at port %s', port);
         });
     },
     (error) => {
-        console.log('Unable to start the server.\nError: ' + JSON.stringify(error) + '\n');
+        console.log('[Nezaldi] Unable to start the server.\nError: ' + JSON.stringify(error) + '\n');
     }
 );
 
+
+function findMatch (rs, request) {
+    for (let i = 0; i < rs.length; i++) {
+        const match = matchRule(rs[i], request);
+        if(match) {
+            return match;
+        }
+    }
+}
+
+function matchRule (rule, request) {
+    const url = request.url;
+    const match = rule.regex.exec(url);
+    if (match) {
+        if (rule.accept) {
+            const isSameAccept = request.headers.accept.toLowerCase() === rule.accept.toLowerCase();
+            return isSameAccept ?  { rule: rule, match: match} : undefined
+        }
+        return { rule: rule, match: match};
+    }
+    return undefined;
+}
 
 function loadConf (onSuccess, onError) {
     const path = confFilePath();
@@ -64,7 +105,7 @@ function loadConf (onSuccess, onError) {
         try {
             const conf = JSON.parse(data);
             validateConf(conf);
-            onSuccess(conf);
+            onSuccess(conf, path);
         } catch (error2) {
             onError({error: error2.message});
         }
@@ -72,11 +113,11 @@ function loadConf (onSuccess, onError) {
 }
 
 function validateConf(confObj) {
-    if(!confObj.apiUrl) {
-        throw new Error('Required parameter: apiUrl');
+    if(!confObj.defaultUrl) {
+        throw new Error('Required parameter: defaultUrl');
     }
-    if(!confObj.devServerUrl && !confObj.devSource) {
-        throw new Error('Required parameter: devServerUrl or devSource');
+    if(!confObj.rules) {
+        throw new Error('Required parameter: rules');
     }
 }
 
@@ -90,18 +131,6 @@ function confFilePath() {
         }
     }
     return '.nezaldi.json';
-}
-
-function getTargetUrl(request, conf) {
-    if (isApiCall(request)) {
-        return conf.apiUrl;
-    }
-    return conf.devServerUrl;
-}
-
-function isApiCall(request) {
-    // contentType != Json
-    return request.headers.accept.toLowerCase() === "application/json";
 }
 
 

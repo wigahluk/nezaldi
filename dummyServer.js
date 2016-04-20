@@ -10,6 +10,7 @@ var port =  4000;
 // Any requests to localhost:3000/build is proxied
 // to webpack-dev-server
 app.all('/*', function (req, resp) {
+    console.log('[DummyServer] Invoqued URL:', req.url);
     resp.writeHead(200, { 'Content-Type': 'application/json'});
     resp.end(JSON.stringify({'Hello': 'World'}));
 });
@@ -17,5 +18,5 @@ app.all('/*', function (req, resp) {
 
 // And run the server
 app.listen(port, function () {
-    console.log('Dummy Server running at port %s', port);
+    console.log('[Dummy Server] Running at port %s', port);
 });

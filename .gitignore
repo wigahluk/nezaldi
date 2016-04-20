@@ -19,5 +19,5 @@ atlassian-ide-plugin.xml
 /logs
 
 # Generated or maanged sources
-generated-sources/
-node_modules/
+/generated-sources/
+/node_modules/
