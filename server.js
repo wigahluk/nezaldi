@@ -1,33 +1,21 @@
 /* global process */
 'use strict';
 
-// This file is our entry point for Node.js
 const express = require('express');
 const path = require('path');
 const httpProxy = require('http-proxy');
 const fs = require('fs');
 
+const confValidator = require('./src/confValidator');
+const Rule = require('./src/rule');
+
 loadConf (
     (conf) => {
         const proxy = httpProxy.createProxyServer();
         const app = express();
-
         const port = conf.port || 3000;
-
         const defaultUrl = conf.defaultUrl;
-
-
-
-        const rules = conf.rules.map((rule, idx) => {
-            return {
-                regex: new RegExp(rule.path, 'i'),
-                target: rule.target,
-                resetPath: !!rule.resetPath,
-                accept: rule.accept,
-                isStatic: rule.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(rule.target) : false
-            }
-        });
-
+        const rules = conf.rules.map((rule, idx) => new Rule(rule));
 
         app.use((req, res, next) => {
             req.headers = cleanHeaders(req.headers);
@@ -88,12 +76,10 @@ function matchRule (rule, request) {
 }
 
 function loadConf (onSuccess, onError) {
-    const path = confFilePath();
+    const path = confFilePath(process.argv);
 
     if (!path) {
-        onError({
-            error: "No configuration file provided. Use --conf=<file name>."
-        });
+        onError({ error: 'No configuration file provided. Use --conf=<file name>.' });
         return;
     }
 
@@ -104,29 +90,20 @@ function loadConf (onSuccess, onError) {
         }
         try {
             const conf = JSON.parse(data);
-            validateConf(conf);
+            confValidator.validateRawObject(conf);
             onSuccess(conf, path);
         } catch (error2) {
-            onError({error: error2.message});
+            onError({ error: error2.message });
         }
     });
 }
 
-function validateConf(confObj) {
-    if(!confObj.defaultUrl) {
-        throw new Error('Required parameter: defaultUrl');
-    }
-    if(!confObj.rules) {
-        throw new Error('Required parameter: rules');
-    }
-}
-
-function confFilePath() {
-    const customPath = process.argv.find((item) => item.startsWith('--conf'));
+function confFilePath(args) {
+    const customPath = args.find((item) => item.startsWith('--conf'));
 
     if(customPath) {
-        var arr = customPath.split('=');
-        if(arr.length) {
+        const arr = customPath.split('=');
+        if(arr.length > 1) {
             return arr[1].trim();
         }
     }

@@ -1,0 +1,26 @@
+/* global describe */
+/* global it */
+/* global expect */
+/* global require */
+'use strict';
+
+describe('Rule', () => {
+    const Rule = require('./rule');
+
+    it('Minimal Rule: pattern and path', () => {
+        const ruleDef = {
+            path: "^/abc/?",
+            target: "http://localhost/"
+        };
+        const rule = new Rule(ruleDef);
+
+        expect(rule.target).toBe('http://localhost/');
+        expect(rule.regex.test('sometjing')).toBe(false);
+        expect(rule.regex.test('/abc')).toBe(true);
+        expect(rule.regex.test('/abc/')).toBe(true);
+        expect(rule.regex.test('/abc/some/more?stuff')).toBe(true);
+        expect(rule.resetPath).toBe(false);
+        expect(rule.accept).toBeUndefined();
+        expect(rule.isStatic).toBe(false);
+    });
+});
