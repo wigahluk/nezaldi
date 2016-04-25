@@ -4,6 +4,7 @@
 const express = require('express');
 const path = require('path');
 const httpProxy = require('http-proxy');
+const https = require('https');
 const fs = require('fs');
 
 const confValidator = require('./src/confValidator');
@@ -37,9 +38,23 @@ loadConf (
                     newUrl = '/' + newUrl;
                 }
                 req.url = newUrl;
-                proxy.web(req, res, {
-                    target: newTarget
-                });
+                // super hack due to some issues with this server, I need to investigate.
+                if (newTarget === 'https://alm.aeip.apigee.net/userinfo') {
+                    https.get(newTarget, (resp) => {
+                        console.log('statusCode: ', resp.statusCode);
+                        console.log('headers: ', resp.headers);
+
+                        resp.on('data', (d) => {
+                            res.headers = resp.headers;
+                            res.statusCode = resp.statusCode;
+                            res.end();
+                        });
+                    });
+                } else {
+                    proxy.web(req, res, {
+                        target: newTarget
+                    });
+                }
             }
         });
         // Run the server

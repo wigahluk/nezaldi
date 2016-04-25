@@ -22,5 +22,16 @@ describe('Rule', () => {
         expect(rule.resetPath).toBe(false);
         expect(rule.accept).toBeUndefined();
         expect(rule.isStatic).toBe(false);
+        expect(rule.isValid()).toBe(true);
     });
+
+    it('Rule that resets path', () => {
+        const ruleDef = {
+            path: "^/abc/?",
+            "resetPath": true,
+            target: "http://localhost/"
+        };
+        const rule = new Rule(ruleDef);
+        expect(rule.resetPath).toBe(true);
+    })
 });

@@ -2,11 +2,14 @@
 'use strict';
 
 function Rule (ruleDef) {
-    this.target = ruleDef.target;
-    this.regex = new RegExp(ruleDef.path, 'i');
-    this.resetPath = !!ruleDef.resetPath;
-    this.accept = ruleDef.accept;
-    this.isStatic = ruleDef.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(ruleDef.target) : false
+    const def = ruleDef || {};
+    this.target = def.target;
+    this.regex = new RegExp(def.path || '', 'i');
+    this.resetPath = !!def.resetPath;
+    this.accept = def.accept;
+    this.isStatic = def.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(ruleDef.target) : false
 }
+
+Rule.prototype.isValid = function () { return !!this.target && !!this.regex; };
 
 module.exports = Rule;
