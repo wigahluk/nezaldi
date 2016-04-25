@@ -6,6 +6,7 @@ const path = require('path');
 const httpProxy = require('http-proxy');
 const https = require('https');
 const fs = require('fs');
+const url = require('url');
 
 const confValidator = require('./src/confValidator');
 const Rule = require('./src/rule');
@@ -40,10 +41,9 @@ loadConf (
                 req.url = newUrl;
                 // super hack due to some issues with this server, I need to investigate.
                 if (newTarget === 'https://alm.aeip.apigee.net/userinfo') {
-                    https.get(newTarget, (resp) => {
-                        console.log('statusCode: ', resp.statusCode);
-                        console.log('headers: ', resp.headers);
-
+                    let options = url.parse(newTarget);
+                    options.headers = req.headers;
+                    https.get(options, (resp) => {
                         resp.on('data', (d) => {
                             res.headers = resp.headers;
                             res.statusCode = resp.statusCode;
