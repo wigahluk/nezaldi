@@ -1,6 +1,6 @@
 {
   "name": "nezaldi",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "NodeJS proxy server intended to be used during development of SPAs that use APIs under the same domain.",
   "main": "server.js",
   "scripts": {

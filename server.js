@@ -44,9 +44,12 @@ loadConf (
                     let options = url.parse(newTarget);
                     options.headers = req.headers;
                     https.get(options, (resp) => {
+                        res.headers = resp.headers;
+                        res.statusCode = resp.statusCode;
                         resp.on('data', (d) => {
-                            res.headers = resp.headers;
-                            res.statusCode = resp.statusCode;
+                            res.write(d);
+                        });
+                        resp.on('end', () => {
                             res.end();
                         });
                     });
