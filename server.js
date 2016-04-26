@@ -30,7 +30,6 @@ loadConf (
                     target: defaultUrl
                 });
             } else {
-                console.log(match);
                 req.url = match.path;
                 proxy.web(req, res, {
                     target: match.target
