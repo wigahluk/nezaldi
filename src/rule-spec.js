@@ -33,5 +33,18 @@ describe('Rule', () => {
         };
         const rule = new Rule(ruleDef);
         expect(rule.resetPath).toBe(true);
+    });
+
+    it('Rule match request', () => {
+        const request = {
+            url: '/abc'
+        };
+        const ruleDef = {
+            path: "^/abc/?",
+            "resetPath": true,
+            target: "http://localhost/"
+        };
+        const rule = new Rule(ruleDef);
+        expect(rule.match(request)).toBeTruthy();
     })
 });

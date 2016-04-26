@@ -17,11 +17,11 @@ loadConf (
         const app = express();
         const port = conf.port || 3000;
         const defaultUrl = conf.defaultUrl;
-        const rules = conf.rules.map((rule, idx) => new Rule(rule));
+        const rules = Rule.rules(conf.rules);
 
         app.use((req, res, next) => {
             req.headers = cleanHeaders(req.headers);
-            const match = findMatch(rules, req);
+            const match = rules.match(req);
             req.originalUrl = req.url;
             if(!match) {
                 console.log('no match, defaulting to', defaultUrl);
@@ -30,34 +30,11 @@ loadConf (
                     target: defaultUrl
                 });
             } else {
-                let newTarget = match.rule.target;
-                match.match.slice(1).forEach((s, idx) => {
-                    newTarget = newTarget.replace('$' + (idx + 1), s);
+                console.log(match);
+                req.url = match.path;
+                proxy.web(req, res, {
+                    target: match.target
                 });
-                let newUrl = req.originalUrl.substr(match.match[0].length);
-                if(newUrl.indexOf('/') !== 0) {
-                    newUrl = '/' + newUrl;
-                }
-                req.url = newUrl;
-                // super hack due to some issues with this server, I need to investigate.
-                if (newTarget === 'https://alm.aeip.apigee.net/userinfo') {
-                    let options = url.parse(newTarget);
-                    options.headers = req.headers;
-                    https.get(options, (resp) => {
-                        res.headers = resp.headers;
-                        res.statusCode = resp.statusCode;
-                        resp.on('data', (d) => {
-                            res.write(d);
-                        });
-                        resp.on('end', () => {
-                            res.end();
-                        });
-                    });
-                } else {
-                    proxy.web(req, res, {
-                        target: newTarget
-                    });
-                }
             }
         });
         // Run the server
@@ -70,28 +47,6 @@ loadConf (
     }
 );
 
-
-function findMatch (rs, request) {
-    for (let i = 0; i < rs.length; i++) {
-        const match = matchRule(rs[i], request);
-        if(match) {
-            return match;
-        }
-    }
-}
-
-function matchRule (rule, request) {
-    const url = request.url;
-    const match = rule.regex.exec(url);
-    if (match) {
-        if (rule.accept) {
-            const isSameAccept = request.headers.accept.toLowerCase() === rule.accept.toLowerCase();
-            return isSameAccept ?  { rule: rule, match: match} : undefined
-        }
-        return { rule: rule, match: match};
-    }
-    return undefined;
-}
 
 function loadConf (onSuccess, onError) {
     const path = confFilePath(process.argv);
