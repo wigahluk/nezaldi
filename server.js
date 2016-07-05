@@ -24,13 +24,17 @@ loadConf (
             const match = rules.match(req);
             req.originalUrl = req.url;
             if(!match) {
-                console.log('no match, defaulting to', defaultUrl);
+                console.log('No match for ' + req.url + ', defaulting to', defaultUrl);
                 req.url = '/';
                 proxy.web(req, res, {
                     target: defaultUrl
                 });
             } else {
                 req.url = match.path;
+                match.addHeaders.forEach((h) => {
+                    console.log(h, req.headers);
+                    req.headers[h.name] = h.value;
+                });
                 proxy.web(req, res, {
                     target: match.target
                 });

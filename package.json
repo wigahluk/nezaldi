@@ -1,6 +1,6 @@
 {
   "name": "nezaldi",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "NodeJS proxy server intended to be used during development of SPAs that use APIs under the same domain.",
   "main": "server.js",
   "scripts": {
@@ -27,5 +27,8 @@
   },
   "devDependencies": {
     "jasmine": "^2.4.1"
+  },
+  "bin": {
+    "nezaldi": "./bin/nezaldi"
   }
 }

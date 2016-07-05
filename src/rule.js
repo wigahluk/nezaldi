@@ -8,6 +8,7 @@ function Rule (ruleDef) {
     this.resetPath = !!def.resetPath;
     this.accept = def.accept;
     this.isStatic = def.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(ruleDef.target) : false
+    this.addHeaders = def.addHeaders || [];
 }
 
 Rule.prototype.isValid = function () { return !!this.target && !!this.regex; };
@@ -42,6 +43,7 @@ function RuleMatch (rxMatch, rule, request) {
     this.matchPrefix = rxMatch[0];
     this.path = this.resetPath? '' : extractPath(request.url, rxMatch[0]);
     this.isStatic = rule.isStatic;
+    this.addHeaders = rule.addHeaders;
 }
 
 function RuleCollection (ruleDefs) {
