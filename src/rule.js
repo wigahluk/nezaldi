@@ -17,12 +17,12 @@ Rule.prototype.match = function (request) {
     const match = this.regex.exec(request.url);
     if (match) {
         if (this.accept) {
-            const isSameAccept = request.headers.accept.toLowerCase() === this.accept.toLowerCase();
+            const accept = request.headers.accept.toLowerCase().split(',');
+            const isSameAccept = accept.indexOf(this.accept.toLowerCase()) >= 0;
             return isSameAccept ?  new RuleMatch(match, this, request) : undefined
         }
         return new RuleMatch(match, this, request);
     }
-    return undefined;
 };
 
 Rule.rules = function (ruleDefs) { return new RuleCollection(ruleDefs); };

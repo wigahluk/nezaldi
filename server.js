@@ -11,6 +11,15 @@ const url = require('url');
 const confValidator = require('./src/confValidator');
 const Rule = require('./src/rule');
 
+function lDebug (debug) {
+    return function () {
+        if(!debug) {
+            return;
+        }
+        console.log('[Nezaldi]', Array.prototype.join.call(arguments,' '));
+    };
+}
+
 loadConf (
     (conf) => {
         const proxy = httpProxy.createProxyServer();
@@ -18,21 +27,25 @@ loadConf (
         const port = conf.port || 3000;
         const defaultUrl = conf.defaultUrl;
         const rules = Rule.rules(conf.rules);
+        const ldebug = lDebug(conf.debug);
 
         app.use((req, res, next) => {
+            ldebug('Request URL:', req.url);
+            ldebug('Request Headers:\n', JSON.stringify(req.headers));
+            
             req.headers = cleanHeaders(req.headers);
             const match = rules.match(req);
             req.originalUrl = req.url;
             if(!match) {
-                console.log('No match for ' + req.url + ', defaulting to', defaultUrl);
+                ldebug('No match for ' + req.url + ', defaulting to', defaultUrl);
                 req.url = '/';
                 proxy.web(req, res, {
                     target: defaultUrl
                 });
             } else {
+                ldebug('Match for ' + req.url);
                 req.url = match.path;
                 match.addHeaders.forEach((h) => {
-                    console.log(h, req.headers);
                     req.headers[h.name] = h.value;
                 });
                 proxy.web(req, res, {
