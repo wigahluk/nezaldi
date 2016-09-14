@@ -45,6 +45,9 @@ loadConf (
             } else {
                 ldebug('Match for ' + req.url);
                 req.url = match.path;
+                match.removeHeaders.forEach((h) => {
+                    if (req.headers[h]) { delete req.headers[h]; }
+                });
                 match.addHeaders.forEach((h) => {
                     req.headers[h.name] = h.value;
                 });
