@@ -82,6 +82,9 @@ Use this property to limit the matches to only those containing the given accept
 * **addHeaders** [Key Value Map Array] In the case you need to add some headers to your calls that are not present
 in the original request, you can do so by adding them here.
 
+* **removeHeaders** [Key Value Map Array] In the case you need to remove some headers from the original request, 
+you can do so by adding them here.
+
 ### Some notes
 
 Nezaldi will remove the `Host` and `Cookie` Headers of each request before sending it to the target.
