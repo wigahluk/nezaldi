@@ -1,5 +1,63 @@
 #!/usr/bin/env node
-
+/* global require */
+/* global process */
 'use strict';
 
-console.log('TODO: Load server here.');
+const path = require('path');
+const fs = require('fs');
+const cli = require('../src/cli');
+const validator = require('../src/confValidator');
+const Nezaldi = require('../src/nezaldi');
+const args = process.argv;
+
+// Help
+if ( cli.has(args, '-h') || cli.has(args, '--help')) {
+    console.log([
+        'usage: nezaldi [options]',
+        '',
+        'options:',
+        '  --conf              Path to configuration file',
+        '  -p                  Port to be used. Default 3000. Can be specified in the configuration object',
+        '  -h --help           Print this list and exit.'
+    ].join('\n'));
+    process.exit();
+}
+
+
+// Port
+let port = 3000;
+if ( cli.has(args, '-p') ) {
+    port = Number(cli.get(args, '-p'));
+}
+
+const filePath = (relativePath) => path.resolve(process.cwd(), relativePath);
+
+const validate = validator.validateRawObject;
+
+// Load configuration
+function loadConf () {
+    if ( cli.has(args, '--conf')) {
+        const confPath = cli.get(args, '--conf');
+        if (!confPath) {
+            cli.log('usage: nezaldi --conf <path to configuration>')
+        } else {
+            return validate(JSON.parse(fs.readFileSync(path.resolve(process.cwd(), confPath), 'utf8')));
+        }
+    } else {
+        // Try one of the posible default values
+        if (fs.existsSync(filePath('./nezaldi.json'))) {
+            return validate(JSON.parse(fs.readFileSync(filePath('./nezaldi.json')), 'utf8'));
+        }
+        if (fs.existsSync(filePath('./.nezaldi.json'))) {
+            return validate(JSON.parse(fs.readFileSync(filePath('./.nezaldi.json')), 'utf8'));
+        }
+        cli.log('Configuration file required.');
+        return validate({});
+    }
+}
+
+const conf = loadConf();
+conf.port = conf.port || port;
+
+const server = new Nezaldi(conf);
+server.start();

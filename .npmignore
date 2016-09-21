@@ -21,3 +21,6 @@ atlassian-ide-plugin.xml
 # Generated or maanged sources
 /generated-sources/
 /node_modules/
+
+# nezaldi
+/nezaldi.json

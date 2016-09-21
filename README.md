@@ -14,48 +14,56 @@ Install it with NPM:
     
 Create a file in your project root named `.nezaldi.json` and write your route configuration there:
 
+```json
+{
+  "debug": false,
+  "defaultUrl": "http://localhost:4000",
+  "rules": [
     {
-      "debug": false,
-      "defaultUrl": "http://localhost:4000",
-      "rules": [
+      "path": "^/$",
+      "resetPath": true,
+      "target": "http://localhost:4000/index.html"
+    },
+    {
+      "path": "^/bundles/",
+      "target": "http://mywebpackserver/bundles/"
+    },
+    {
+      "path": "^/(books|pets)/",
+      "target": "http://$1-server/"
+    },
+    {
+      "path": "^/html/",
+      "accept": "text/html",
+      "target": "http://myhtmlserver/"
+    },
+    {
+      "path": "^/users/",
+      "target": "http://myserverneedsaheader/",
+      "addHeaders": [
         {
-          "path": "^/$",
-          "resetPath": true,
-          "target": "http://localhost:4000/index.html"
-        },
-        {
-          "path": "^/bundles/",
-          "target": "http://mywebpackserver/bundles/"
-        },
-        {
-          "path": "^/(books|pets)/",
-          "target": "http://$1-server/"
-        },
-        {
-          "path": "^/html/",
-          "accept": "text/html"
-          "target": "http://myhtmlserver/"
-        },
-        {
-          "path": "^/users/",
-          "target": "http://myserverneedsaheader/"
-          "addHeaders": [
-            {
-              "name": "X-MyHeader",
-              "value": "Hello Header"
-            }
-          ]
+          "name": "X-MyHeader",
+          "value": "Hello Header"
         }
       ]
     }
+  ]
+}
+```
 
-Start the server
+Start the server from a `package.json` script:
 
-    node nezaldi
+```json
+{
+    "scripts": {
+      "start": "npm nezaldi"
+    }
+}
+```
     
 ### Available Options
 
-`--conf` Configuration file to use, by default it will use `.nezaldi.json`
+`--conf` Configuration file to use, by default it will use `nezaldi.json`
 
 ### Global Configuration Settings
 
@@ -85,6 +93,3 @@ in the original request, you can do so by adding them here.
 * **removeHeaders** [Key Value Map Array] In the case you need to remove some headers from the original request, 
 you can do so by adding them here.
 
-### Some notes
-
-Nezaldi will remove the `Host` and `Cookie` Headers of each request before sending it to the target.

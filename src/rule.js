@@ -7,7 +7,7 @@ function Rule (ruleDef) {
     this.regex = new RegExp(def.path || '', 'i');
     this.resetPath = !!def.resetPath;
     this.accept = def.accept;
-    this.isStatic = def.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(ruleDef.target) : false
+    this.isStatic = def.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(ruleDef.target) : false;
     this.addHeaders = def.addHeaders || [];
     this.removeHeaders = def.removeHeaders || [];
 }

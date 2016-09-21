@@ -1,13 +1,12 @@
 {
   "name": "nezaldi",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "NodeJS proxy server intended to be used during development of SPAs that use APIs under the same domain.",
-  "main": "server.js",
+  "main": "./src/nezaldi.js",
   "scripts": {
-    "start:proxy": "node ./server.js",
-    "start:dummy": "node dummyServer.js",
+    "start:proxy": "./bin/nezaldi",
+    "start:dummy": "node ./src/dummyServer.js",
     "start:test": "npm run start:proxy & npm run start:dummy",
-    "start": "node ./server.js",
     "test": "jasmine"
   },
   "repository": {

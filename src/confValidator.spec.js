@@ -4,8 +4,9 @@
 /* global require */
 'use strict';
 
+const validator = require('./confValidator');
+
 describe('confValidator', () => {
-    const validator = require('./confValidator');
 
     it('Empty object not allowed', () => {
         function v () {
@@ -13,4 +14,5 @@ describe('confValidator', () => {
         }
         expect(v).toThrow();
     })
+
 });
