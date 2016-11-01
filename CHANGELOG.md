@@ -1,3 +1,7 @@
+# 0.3.1
+
+Removing dependency on `http-proxy` and handling error when a request fails.
+
 # 0.3.0
 
 ## Non breaking changes

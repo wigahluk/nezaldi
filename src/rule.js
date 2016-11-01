@@ -38,16 +38,15 @@ function extractPath(originalPath, match) {
 
 function RuleMatch (rxMatch, rule, request) {
     this.isRedirect = !!rule.redirect;
+    this.isStatic = rule.isStatic;
+
     this.target = rxMatch
         .slice(1)
         .reduce(
             (path, fragment, idx) => path.replace('$' + (idx + 1), fragment),
             rule.targetUrl()
         );
-    this.originalUrl = request.url;
-    this.matchPrefix = rxMatch[0];
-    this.path = this.resetPath? '' : extractPath(request.url, rxMatch[0]);
-    this.isStatic = rule.isStatic;
+    this.path = rule.resetPath? '' : extractPath(request.url, rxMatch[0]);
     this.addHeaders = rule.addHeaders;
     this.removeHeaders = rule.removeHeaders;
 }

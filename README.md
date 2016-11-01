@@ -30,7 +30,7 @@ Create a file in your project root named `.nezaldi.json` and write your route co
     },
     {
       "path": "^/redirect/",
-      "target": "http://myotherserver/home/"
+      "redirect": "http://myotherserver/home/"
     },
     {
       "path": "^/(books|pets)/",
@@ -67,7 +67,8 @@ Start the server from a `package.json` script:
     
 ### Available Options
 
-`--conf` Configuration file to use, by default it will use `nezaldi.json`
+* `--conf` Configuration file to use, by default it will use `nezaldi.json`
+* `-p <port>` Sets the port for running Nezaldi. Default 3000. It can be specified in the configuration file.
 
 ### Global Configuration Settings
 
@@ -82,7 +83,8 @@ specific ones before the general ones
 
 * **target** [String] This is the URL of the server that will be used when the rule matches
 
-* **redirect** [String] URL to be used as a redirect response
+* **redirect** [String] URL to be used as a redirect response. 
+`redirect` should not be used in combination with `target` setting in the same rule.
 
 * **resetPath** [Boolean] Will force Nezaldi to not add any fragments to the target URL.
 By default, Nezaldi will remove the *path* fragment from the url adding the rest of it to the

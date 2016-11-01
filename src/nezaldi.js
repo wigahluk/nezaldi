@@ -15,17 +15,13 @@
  */
 
 const express = require('express');
-const httpProxy = require('http-proxy');
-const https = require('https');
-const url = require('url');
 const cli = require('./cli');
 const Rule = require('./rule');
+const hProxy = require('./proxy');
 
 function lDebug (debug) {
-    return function () {
-        if(!debug) {
-            return;
-        }
+    return () => {
+        if(!debug) { return; }
         cli.log(Array.prototype.join.call(arguments,' '));
     };
 }
@@ -47,35 +43,24 @@ function Nezaldi (conf) {
             req.originalUrl = req.url;
             if(!match) {
                 ldebug(`No match for ${req.url}, defaulting to`, defaultUrl);
-                req.url = '/';
-                proxy.web(req, res, {
-                    target: defaultUrl
-                });
+                hProxy(defaultUrl)(req, res);
             } else {
                 if (match.isRedirect) {
                     // Redirect calls
+                    ldebug(`Match source: ${req.url} -> redirect: ${match.target} `);
                     res.writeHead(302, {'Location': match.target });
                     res.end();
                 } else {
                     // Proxy call
                     ldebug(`Match source: ${req.url} -> target: ${match.path} `);
-                    req.url = match.path;
-                    match.removeHeaders.forEach((h) => {
-                        if (req.headers[h]) { delete req.headers[h]; }
-                    });
-                    match.addHeaders.forEach((h) => {
-                        req.headers[h.name] = h.value;
-                    });
-                    proxy.web(req, res, {
-                        target: match.target
-                    });
+                    match.removeHeaders.forEach(h => { if (req.headers[h]) { delete req.headers[h]; } });
+                    match.addHeaders.forEach(h => { req.headers[h.name] = h.value; });
+                    hProxy(match.target + match.path)(req, res);
                 }
             }
         });
         // Run the server
-        app.listen(port, function () {
-            cli.log(`Server running at port ${port}`);
-        });
+        app.listen(port, () => { cli.log(`Server running at port ${port}`); });
     }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "nezaldi",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "NodeJS proxy server intended to be used during development of SPAs that use APIs under the same domain.",
   "main": "./src/nezaldi.js",
   "scripts": {
@@ -14,18 +14,17 @@
     "url": "git@github.com:wigahluk/nezaldi.git"
   },
   "keywords": [
-    "NodeJS",
-    "Node",
+    "Router",
+    "SPAs",
     "Proxy"
   ],
   "author": "Oscar Ponce",
   "license": "Apache-2.0",
   "dependencies": {
-    "express": "^4.13.4",
-    "http-proxy": "^1.13.2"
+    "express": "4.13.4"
   },
   "devDependencies": {
-    "jasmine": "^2.4.1"
+    "jasmine": "2.4.1"
   },
   "bin": {
     "nezaldi": "./bin/nezaldi"
