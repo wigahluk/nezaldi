@@ -39,7 +39,7 @@ function Nezaldi (conf) {
         const rules = Rule.rules(conf.rules);
         const ldebug = lDebug(conf.debug);
 
-        app.use((req, res, next) => {
+        app.use((req, res) => {
             ldebug('Request URL:', req.url);
             ldebug('Request Headers:\n', JSON.stringify(req.headers));
 
@@ -52,17 +52,24 @@ function Nezaldi (conf) {
                     target: defaultUrl
                 });
             } else {
-                ldebug(`Match source: ${req.url} -> target: ${match.path} `);
-                req.url = match.path;
-                match.removeHeaders.forEach((h) => {
-                    if (req.headers[h]) { delete req.headers[h]; }
-                });
-                match.addHeaders.forEach((h) => {
-                    req.headers[h.name] = h.value;
-                });
-                proxy.web(req, res, {
-                    target: match.target
-                });
+                if (match.isRedirect) {
+                    // Redirect calls
+                    res.writeHead(302, {'Location': match.target });
+                    res.end();
+                } else {
+                    // Proxy call
+                    ldebug(`Match source: ${req.url} -> target: ${match.path} `);
+                    req.url = match.path;
+                    match.removeHeaders.forEach((h) => {
+                        if (req.headers[h]) { delete req.headers[h]; }
+                    });
+                    match.addHeaders.forEach((h) => {
+                        req.headers[h.name] = h.value;
+                    });
+                    proxy.web(req, res, {
+                        target: match.target
+                    });
+                }
             }
         });
         // Run the server

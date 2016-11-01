@@ -4,6 +4,7 @@
 function Rule (ruleDef) {
     const def = ruleDef || {};
     this.target = def.target;
+    this.redirect = def.redirect;
     this.regex = new RegExp(def.path || '', 'i');
     this.resetPath = !!def.resetPath;
     this.accept = def.accept;
@@ -12,7 +13,9 @@ function Rule (ruleDef) {
     this.removeHeaders = def.removeHeaders || [];
 }
 
-Rule.prototype.isValid = function () { return !!this.target && !!this.regex; };
+Rule.prototype.targetUrl = function () { return this.redirect || this.target; };
+
+Rule.prototype.isValid = function () { return !!this.targetUrl() && !!this.regex; };
 
 Rule.prototype.match = function (request) {
     const match = this.regex.exec(request.url);
@@ -34,11 +37,12 @@ function extractPath(originalPath, match) {
 }
 
 function RuleMatch (rxMatch, rule, request) {
+    this.isRedirect = !!rule.redirect;
     this.target = rxMatch
         .slice(1)
         .reduce(
             (path, fragment, idx) => path.replace('$' + (idx + 1), fragment),
-            rule.target
+            rule.targetUrl()
         );
     this.originalUrl = request.url;
     this.matchPrefix = rxMatch[0];

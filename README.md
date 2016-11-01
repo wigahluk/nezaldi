@@ -29,6 +29,10 @@ Create a file in your project root named `.nezaldi.json` and write your route co
       "target": "http://mywebpackserver/bundles/"
     },
     {
+      "path": "^/redirect/",
+      "target": "http://myotherserver/home/"
+    },
+    {
       "path": "^/(books|pets)/",
       "target": "http://$1-server/"
     },
@@ -77,6 +81,8 @@ Rules are executed in order. If you have rules that are more specific than other
 specific ones before the general ones
 
 * **target** [String] This is the URL of the server that will be used when the rule matches
+
+* **redirect** [String] URL to be used as a redirect response
 
 * **resetPath** [Boolean] Will force Nezaldi to not add any fragments to the target URL.
 By default, Nezaldi will remove the *path* fragment from the url adding the rest of it to the

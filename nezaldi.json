@@ -8,6 +8,10 @@
       "target": "http://localhost:4000/index.html"
     },
     {
+      "path": "^/redirect$",
+      "redirect": "https://www.google.com"
+    },
+    {
       "path": "^/hello/?$",
       "resetPath": true,
       "accept": "text/html",

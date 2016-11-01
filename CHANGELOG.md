@@ -1,3 +1,9 @@
+# 0.3.0
+
+## Non breaking changes
+
+* Routes can also be configured as redirects.
+
 # 0.2.9
 
 ## Breaking Changes

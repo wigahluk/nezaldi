@@ -1,7 +1,7 @@
 /* global module */
 'use strict';
 
-function validateRawObject(confObj) {
+function validate(confObj) {
     if(!confObj.defaultUrl) {
         throw new Error('Required parameter: defaultUrl');
     }
@@ -12,5 +12,5 @@ function validateRawObject(confObj) {
 }
 
 module.exports = {
-    validateRawObject: validateRawObject
+    validateRawObject: validate
 };
