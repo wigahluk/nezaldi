@@ -1,6 +1,12 @@
+# 0.3.2
+
+* Removing dependency on `express`.
+After this upgrade you may want to run `npm prune` to remove unused modules.
+
 # 0.3.1
 
-Removing dependency on `http-proxy` and handling error when a request fails.
+* Removing dependency on `http-proxy` and handling error when a request fails.
+After this upgrade you may want to run `npm prune` to remove unused modules.
 
 # 0.3.0
 

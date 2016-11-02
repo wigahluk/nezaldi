@@ -18,6 +18,7 @@ const express = require('express');
 const cli = require('./cli');
 const Rule = require('./rule');
 const hProxy = require('./proxy');
+const http = require('http');
 
 function lDebug (debug) {
     return () => {
@@ -28,14 +29,12 @@ function lDebug (debug) {
 
 function Nezaldi (conf) {
     this.start = () => {
-        const proxy = httpProxy.createProxyServer();
-        const app = express();
         const port = conf.port;
         const defaultUrl = conf.defaultUrl;
         const rules = Rule.rules(conf.rules);
         const ldebug = lDebug(conf.debug);
 
-        app.use((req, res) => {
+        const server = http.createServer((req, res) => {
             ldebug('Request URL:', req.url);
             ldebug('Request Headers:\n', JSON.stringify(req.headers));
 
@@ -60,7 +59,7 @@ function Nezaldi (conf) {
             }
         });
         // Run the server
-        app.listen(port, () => { cli.log(`Server running at port ${port}`); });
+        server.listen(port, () => { cli.log(`Server running at port ${port}`); });
     }
 }
 

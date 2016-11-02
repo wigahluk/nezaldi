@@ -101,3 +101,6 @@ in the original request, you can do so by adding them here.
 * **removeHeaders** [Key Value Map Array] In the case you need to remove some headers from the original request, 
 you can do so by adding them here.
 
+## Dependencies
+
+Nezaldi is intended to be superlight. It only depends on Node itself and on Jasmine for testing during development mode.
