@@ -27,6 +27,8 @@ function lDebug (debug) {
     };
 }
 
+const buildPath = (target, path) => `${target.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+
 function Nezaldi (conf) {
     this.start = () => {
         const port = conf.port;
@@ -54,7 +56,7 @@ function Nezaldi (conf) {
                     ldebug(`Match source: ${req.url} -> target: ${match.path} `);
                     match.removeHeaders.forEach(h => { if (req.headers[h]) { delete req.headers[h]; } });
                     match.addHeaders.forEach(h => { req.headers[h.name] = h.value; });
-                    hProxy(match.target + match.path)(req, res);
+                    hProxy(buildPath(match.target,match.path))(req, res);
                 }
             }
         });

@@ -13,7 +13,6 @@ const proxy = tUrl => (req, res) => {
         method: req.method,
         headers: req.headers
     };
-    console.log(opts, pUrl.protocol, req.headers.host);
     const proxyRequest = httpRequest(pUrl.protocol)(opts, proxyResponse => {
         proxyResponse.on('data', chunk => { res.write(chunk, 'binary'); });
         proxyResponse.on('end', () => { res.end(); });

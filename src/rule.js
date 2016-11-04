@@ -46,7 +46,7 @@ function RuleMatch (rxMatch, rule, request) {
             (path, fragment, idx) => path.replace('$' + (idx + 1), fragment),
             rule.targetUrl()
         );
-    this.path = rule.resetPath? '' : extractPath(request.url, rxMatch[0]);
+    this.path = rule.resetPath ? '' : extractPath(request.url, rxMatch[0]);
     this.addHeaders = rule.addHeaders;
     this.removeHeaders = rule.removeHeaders;
 }
