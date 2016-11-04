@@ -14,7 +14,6 @@
  limitations under the License.
  */
 
-const express = require('express');
 const cli = require('./cli');
 const Rule = require('./rule');
 const hProxy = require('./proxy');
