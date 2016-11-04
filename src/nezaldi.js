@@ -27,7 +27,7 @@ function lDebug (debug) {
     };
 }
 
-const buildPath = (target, path) => `${target.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+const buildPath = (target, path) => target.replace(/\/$/, '') + (path ? '/' + path.replace(/^\//, '') : '');
 
 function Nezaldi (conf) {
     this.start = () => {
