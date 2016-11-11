@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/v/npm.svg)]()
+[![npm](https://img.shields.io/npm/v/nezaldi.svg)]()
 
 Nezaldi
 =======
