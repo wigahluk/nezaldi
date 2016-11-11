@@ -15,12 +15,12 @@
  */
 
 const cli = require('./cli');
-const Rule = require('./rule');
+const Router = require('./ruleCollection');
 const hProxy = require('./proxy');
 const http = require('http');
 
 function lDebug (debug) {
-    return () => {
+    return function () {
         if(!debug) { return; }
         cli.log(Array.prototype.join.call(arguments,' '));
     };
@@ -32,7 +32,7 @@ function Nezaldi (conf) {
     this.start = () => {
         const port = conf.port;
         const defaultUrl = conf.defaultUrl;
-        const rules = Rule.rules(conf.rules);
+        const rules = new Router(conf.rules);
         const ldebug = lDebug(conf.debug);
 
         const server = http.createServer((req, res) => {

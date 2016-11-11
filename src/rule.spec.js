@@ -1,8 +1,6 @@
 /* global describe */
 /* global it */
 /* global expect */
-/* global require */
-'use strict';
 
 describe('Rule', () => {
     const Rule = require('./rule');

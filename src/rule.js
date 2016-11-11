@@ -29,8 +29,6 @@ Rule.prototype.match = function (request) {
     }
 };
 
-Rule.rules = function (ruleDefs) { return new RuleCollection(ruleDefs); };
-
 function extractPath(originalPath, match) {
     const path = originalPath.substr(match.length);
     return (path.indexOf('/') === 0 || path.length === 0) ? path : '/' + path;
@@ -50,18 +48,5 @@ function RuleMatch (rxMatch, rule, request) {
     this.addHeaders = rule.addHeaders;
     this.removeHeaders = rule.removeHeaders;
 }
-
-function RuleCollection (ruleDefs) {
-    this.rules = ruleDefs.map((rule, idx) => new Rule(rule));
-}
-
-RuleCollection.prototype.match = function (request) {
-    for (let i = 0; i < this.rules.length; i++) {
-        const match = this.rules[i].match(request);
-        if(match) {
-            return match;
-        }
-    }
-};
 
 module.exports = Rule;
