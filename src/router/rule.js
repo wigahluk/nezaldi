@@ -5,7 +5,7 @@ function Rule (ruleDef) {
     const def = ruleDef || {};
     this.target = def.target;
     this.redirect = def.redirect;
-    this.regex = new RegExp(def.path || '', 'i');
+    this.regex = new RegExp(def.path || '^$', 'i');
     this.resetPath = !!def.resetPath;
     this.accept = def.accept;
     this.isStatic = def.target ? !/^https?:\/\/[^\.]+\.|:.+/.test(ruleDef.target) : false;
@@ -23,9 +23,9 @@ Rule.prototype.match = function (request) {
         if (this.accept) {
             const accept = request.headers.accept.toLowerCase().split(',');
             const isSameAccept = accept.indexOf(this.accept.toLowerCase()) >= 0;
-            return isSameAccept ?  new RuleMatch(match, this, request) : undefined
+            return isSameAccept ?  new RequestHandler(match, this, request) : undefined
         }
-        return new RuleMatch(match, this, request);
+        return new RequestHandler(match, this, request);
     }
 };
 
@@ -34,7 +34,7 @@ function extractPath(originalPath, match) {
     return (path.indexOf('/') === 0 || path.length === 0) ? path : '/' + path;
 }
 
-function RuleMatch (rxMatch, rule, request) {
+function RequestHandler (rxMatch, rule, request) {
     this.isRedirect = !!rule.redirect;
     this.isStatic = rule.isStatic;
 

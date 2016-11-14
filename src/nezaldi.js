@@ -15,7 +15,7 @@
  */
 
 const cli = require('./cli');
-const Router = require('./ruleCollection');
+const Router = require('./router/ruleCollection');
 const hProxy = require('./proxy');
 const http = require('http');
 

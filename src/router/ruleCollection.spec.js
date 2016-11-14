@@ -19,10 +19,18 @@ describe('RuleCollection', () => {
     it('one element collection with match', () => {
         const request = { url: '/' };
         const ruleDef = { path: '^/$', target: 'http://localhost/' };
-        const rule = new Rule(ruleDef);
-        const rs = new Rules([rule]);
+        const rs = new Rules([ruleDef]);
         expect(rs.size()).toBe(1);
         const match = rs.match(request);
         expect(match).toBeDefined();
+    });
+
+    it('one element collection with no match', () => {
+        const request = { url: '/no-match' };
+        const ruleDef = { path: '^/$', target: 'http://localhost/' };
+        const rs = new Rules([ruleDef]);
+        expect(rs.size()).toBe(1);
+        const match = rs.match(request);
+        expect(match).toBeUndefined();
     });
 });
