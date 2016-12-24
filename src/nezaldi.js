@@ -19,47 +19,43 @@ const Router = require('./router/ruleCollection');
 const hProxy = require('./proxy');
 const http = require('http');
 
-function lDebug (debug) {
-    return function () {
-        if(!debug) { return; }
-        cli.log(Array.prototype.join.call(arguments,' '));
-    };
-}
-
 const buildPath = (target, path) => target.replace(/\/$/, '') + (path ? '/' + path.replace(/^\//, '') : '');
 
-function Nezaldi (conf) {
+const noMatch = res => { res.writeHead(404); res.end('Nezaldi: Not Found'); };
+
+function Nezaldi (conf, monitor) {
     this.start = () => {
-        const port = conf.port;
-        const defaultUrl = conf.defaultUrl;
-        const rules = new Router(conf.rules);
-        const ldebug = lDebug(conf.debug);
+        const port = conf.port();
+        const rules = new Router(conf.rules());
 
         const server = http.createServer((req, res) => {
-            ldebug('Request URL:', req.url);
-            ldebug('Request Headers:\n', JSON.stringify(req.headers));
+            const t = monitor.createTransaction(req.url);
+            t.sourceHeaders(req.headers);
 
             const match = rules.match(req);
             req.originalUrl = req.url;
             if(!match) {
-                ldebug(`No match for ${req.url}, defaulting to`, defaultUrl);
-                hProxy(defaultUrl)(req, res);
+                t.noMatch();
+                noMatch(res);
+                t.end();
             } else {
                 if (match.isRedirect) {
                     // Redirect calls
-                    ldebug(`Match source: ${req.url} -> redirect: ${match.target} `);
+                    t.redirect(match.target);
                     res.writeHead(302, {'Location': match.target });
                     res.end();
+                    t.end();
                 } else {
                     // Proxy call
-                    ldebug(`Match source: ${req.url} -> target: ${match.path} `);
                     match.removeHeaders.forEach(h => { if (req.headers[h]) { delete req.headers[h]; } });
                     match.addHeaders.forEach(h => { req.headers[h.name] = h.value; });
-                    hProxy(buildPath(match.target,match.path))(req, res);
+                    const p = buildPath(match.target, match.path);
+                    t.proxy(p);
+                    t.targetStart();
+                    hProxy(p)(req, res, t);
                 }
             }
         });
-        // Run the server
         server.listen(port, () => { cli.log(`Server running at port ${port}`); });
     }
 }

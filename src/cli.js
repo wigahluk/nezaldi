@@ -18,7 +18,7 @@ function getValue (args, value) {
 }
 
 function log (msg) {
-    console.log(`[Nezaldi] ${new Date().toISOString()} ${msg}\n`);
+    console.log(`[Nezaldi] ${new Date().toISOString()} ${msg}`);
 }
 
 module.exports = {
