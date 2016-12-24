@@ -35,14 +35,4 @@ describe('Rule', () => {
         const rule = new Rule(ruleDef);
         expect(rule.match(request)).toBeTruthy();
     });
-
-    it('Redirects', () => {
-        const request = { url: '/abc' };
-        const ruleDef = { path: '^/abc/?', redirect: 'http://localhost/' };
-        const rule = new Rule(ruleDef);
-        expect(rule.isValid()).toBe(true);
-        const match = rule.match(request);
-        expect(match).toBeTruthy();
-        expect(match.target).toBe('http://localhost/');
-    });
 });

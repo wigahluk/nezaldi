@@ -26,34 +26,17 @@
       ]
     },
     {
-      "path": "^/developers/bundles/",
-      "target": "http://localhost:4000/bundles/"
-    },
-    {
       "path": "^/a/([^/]+)/h([^/]+)$",
       "target": "http://localhost:4000/z/$1$2"
     },
     {
-      "path": "^/userinfo/?",
-      "target": "https://alm.aeip.apigee.net/userinfo"
+      "path": "^/static/",
+      "target": "./src/dashboard/build/"
     },
     {
-      "path": "^/userinfo2/?",
-      "target": "https://opb-prod.apigee.net/userinfo"
-    },
-    {
-      "path": "^/opb/?",
-      "target": "https://opb-prod.apigee.net/alwayshello"
-    },
-    {
-      "path": "^/organizations/([^/]+)/",
-      "accept": "application/json",
-      "target": "https://mgmtui.e2e.apigee.net/v1/opb/organizations/$1"
-    },
-    {
-      "path": "^/organizations/([^/]+)/",
-      "resetPath": true,
-      "target": "http://localhost:4000/index.html"
+      "path": "^/static2/",
+      "target": "./src/dashboard/build/",
+      "resetPath": true
     }
   ]
 }

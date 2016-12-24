@@ -1,5 +1,4 @@
-/* global module */
-'use strict';
+const requestHandler = require('./requestHandler');
 
 function Rule (ruleDef) {
     const def = ruleDef || {};
@@ -25,28 +24,13 @@ Rule.prototype.match = function (request) {
             const isSameAccept = accept.indexOf(this.accept.toLowerCase()) >= 0;
             return isSameAccept ?  new RequestHandler(match, this, request) : undefined
         }
-        return new RequestHandler(match, this, request);
+        return requestHandler(match, this, request);
     }
 };
 
 function extractPath(originalPath, match) {
     const path = originalPath.substr(match.length);
     return (path.indexOf('/') === 0 || path.length === 0) ? path : '/' + path;
-}
-
-function RequestHandler (rxMatch, rule, request) {
-    this.isRedirect = !!rule.redirect;
-    this.isStatic = rule.isStatic;
-
-    this.target = rxMatch
-        .slice(1)
-        .reduce(
-            (path, fragment, idx) => path.replace('$' + (idx + 1), fragment),
-            rule.targetUrl()
-        );
-    this.path = rule.resetPath ? '' : extractPath(request.url, rxMatch[0]);
-    this.addHeaders = rule.addHeaders;
-    this.removeHeaders = rule.removeHeaders;
 }
 
 module.exports = Rule;

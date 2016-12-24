@@ -63,6 +63,7 @@ function Transaction (monitor, sourceUrl) {
     this.sourceHeaders = hs => { headers.source = hs; };
     this.targetHeaders = hs => { headers.target = hs; };
     this.proxy = url => { targetUrl = url; responseType = 'proxy'; };
+    this.local = url => { targetUrl = url; responseType = 'local'; };
     this.redirect = url => { code = 302; targetUrl = url; responseType = 'redirect'; };
     this.noMatch = () => { code = 404; responseType = 'noMatch'; };
     this.targetStart = () => { targetRequestTime = new Date().valueOf(); };
