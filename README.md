@@ -6,7 +6,7 @@ Nezaldi
 From the Nahuatl 'Path' or 'Trail'. Nezaldi is an _HTTP Proxy Server_ created to help developers that need to serve several sources 
 under the same domain.
 
-![Diagram](diagram_01.svg)
+![Diagram](diagram_01.png)
 
 Nezaldi works as a simplistic replacement for Nginx or other HTTP routers. 
 **It is not intended to be used in production environments**. If you need a router in production, you should be 
