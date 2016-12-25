@@ -16,10 +16,7 @@
 
 const cli = require('./cli');
 const Router = require('./router/ruleCollection');
-const hProxy = require('./router/proxy');
 const http = require('http');
-
-const buildPath = (target, path) => target.replace(/\/$/, '') + (path ? '/' + path.replace(/^\//, '') : '');
 
 const noMatch = res => { res.writeHead(404); res.end('Nezaldi: Not Found'); };
 
@@ -40,21 +37,6 @@ function Nezaldi (conf, monitor) {
                 t.end();
             } else {
                 match(req, res, t);
-                // if (match.isRedirect) {
-                //     // Redirect calls
-                //     t.redirect(match.target);
-                //     res.writeHead(302, {'Location': match.target });
-                //     res.end();
-                //     t.end();
-                // } else {
-                //     // Proxy call
-                //     match.removeHeaders.forEach(h => { if (req.headers[h]) { delete req.headers[h]; } });
-                //     match.addHeaders.forEach(h => { req.headers[h.name] = h.value; });
-                //     const p = buildPath(match.target, match.path);
-                //     t.proxy(p);
-                //     t.targetStart();
-                //     hProxy(p)(req, res, t);
-                // }
             }
         });
         server.listen(port, () => { cli.log(`Server running at port ${port}`); });

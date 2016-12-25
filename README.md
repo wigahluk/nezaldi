@@ -3,10 +3,20 @@
 Nezaldi
 =======
 
-From the Nahuatl 'Path' or 'Trail'. Nezaldi is an http proxy server created to help developers to keep a very thin
-setup on projects that require multiple backend servers usually behind Nginx or similar technology.  
+From the Nahuatl 'Path' or 'Trail'. Nezaldi is an _HTTP Proxy Server_ created to help developers that need to serve several sources 
+under the same domain.
 
-Nezaldi is not intended to be used in production environments, but in development ones.
+![Diagram](diagram_01.svg)
+
+Nezaldi works as a simplistic replacement for Nginx or other HTTP routers. 
+**It is not intended to be used in production environments**. If you need a router in production, you should be 
+using Nginx. But if you need to have a router in your local environment and you don't want or can't install Nginx locally
+Nezaldi will be a great option.
+
+The most common use case and the one that inspired me to create this tool is when you are developing a _serverless_
+single page application (SPA) which may be served by a local development server as _Webpack_ and that also needs access
+to an API in another server, it may be local or remote, or probably more than one of this APIs. In these cases, you want 
+all resources to be served as if they were under the same domain or server. This is what Nezaldi will do.
 
 ## Usage
 
@@ -14,12 +24,15 @@ Install it with NPM:
 
     npm install nezaldi
     
-Create a file in your project root named `.nezaldi.json` and write your route configuration there:
+or Yarn
+
+    yarn add nezaldi --dev
+
+Create a file in your project root named `nezaldi.json` and write your route configuration there:
 
 ```json
 {
   "debug": false,
-  "defaultUrl": "http://localhost:4000",
   "rules": [
     {
       "path": "^/$",
@@ -75,7 +88,6 @@ Start the server from a `package.json` script:
 ### Global Configuration Settings
 
 * **debug** [Boolean] It will print information on the console on every request, including path, match and headers
-* **defaultUrl** [String] The URL that will be used if there is match for a request
 
 ### Rule Configuration Settings
 
@@ -105,4 +117,5 @@ you can do so by adding them here.
 
 ## Dependencies
 
-Nezaldi is intended to be superlight. It only depends on Node itself and on Jasmine for testing during development mode.
+Nezaldi is intended to be superlight. It only depends on Node itself as a library.
+In development mode it depends on Jasmine for testing and Elm for generating the _dashboard_ static resources.

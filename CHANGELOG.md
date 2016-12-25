@@ -1,3 +1,18 @@
+# 1.0.0
+
+Tis version introduces a new **Dashboard** that developers can use for debugging.
+
+## Breaking Changes
+
+* Nezaldi now ignores the `defaultUrl` field in the configuration file. If a call has no match, it will respond with a generic 404 message.
+If you want to control what will be responded, you can add a catch all route.
+
+## Non breaking changes
+
+* You can specify a local path on the `target` value. It will serve files from your local file system.
+* Redirect and Local Static rules support capture groups as regular proxy calls.
+
+
 # 0.3.2
 
 * Removing dependency on `express`.
