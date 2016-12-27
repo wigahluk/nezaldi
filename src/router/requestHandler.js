@@ -37,9 +37,9 @@ const handler = (rxMatches, rule) => (req, res, trans) => {
         return;
     }
     if (rule.isStatic) {
-        console.log('static');
         const p = newPath(rxMatches, req.url, rule.target, rule.resetPath);
-        trans.local(p);trans.targetStart();
+        trans.local(p);
+        trans.targetStart({});
         fProxy(p)(req, res, trans);
         return;
     }
@@ -47,7 +47,7 @@ const handler = (rxMatches, rule) => (req, res, trans) => {
     rule.removeHeaders.forEach(h => { if (req.headers[h]) { delete req.headers[h]; } });
     rule.addHeaders.forEach(h => { req.headers[h.name] = h.value; });
     trans.proxy(p);
-    trans.targetStart();
+    trans.targetStart(req.headers);
     hProxy(p)(req, res, trans);
 };
 

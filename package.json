@@ -7,6 +7,7 @@
     "start:proxy": "./bin/nezaldi",
     "start:dummy": "node ./src/dummyServer.js",
     "start:test": "npm run start:proxy & npm run start:dummy",
+    "build": "elm-make ./src/dashboard/web/main.elm --output=./src/dashboard/build/index.html",
     "test": "jasmine"
   },
   "repository": {

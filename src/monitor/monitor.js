@@ -4,6 +4,16 @@ const lDebug = (debug) => function () {
     if (debug) cli.log(Array.prototype.join.call(arguments,' '));
 };
 
+const toArray = obj => {
+    const a = [];
+    for (let p in obj) {
+        if( obj.hasOwnProperty(p) ) {
+            a.push([p, obj[p]]);
+        }
+    }
+    return a;
+};
+
 function Monitor (dMode) {
     const debugMode = !!dMode;
     const sizeLimit = 1000;
@@ -33,6 +43,7 @@ function Monitor (dMode) {
             ].join('\n'));
         }
     };
+    this.transactions = () => transactions.slice();
 }
 
 Monitor.prototype.createTransaction = function (sourceUrl) {
@@ -60,14 +71,13 @@ function Transaction (monitor, sourceUrl) {
     };
 
     this.transaction = generate;
-    this.sourceHeaders = hs => { headers.source = hs; };
-    this.targetHeaders = hs => { headers.target = hs; };
+    this.sourceHeaders = hs => { headers.source = toArray(hs); };
     this.proxy = url => { targetUrl = url; responseType = 'proxy'; };
     this.local = url => { targetUrl = url; responseType = 'local'; };
     this.redirect = url => { code = 302; targetUrl = url; responseType = 'redirect'; };
     this.noMatch = () => { code = 404; responseType = 'noMatch'; };
-    this.targetStart = () => { targetRequestTime = new Date().valueOf(); };
-    this.targetResponse = (sCode, hs) => { headers.response = hs; code = sCode; targetResponseTime = new Date().valueOf(); };
+    this.targetStart = hs => { headers.target = toArray(hs); targetRequestTime = new Date().valueOf(); };
+    this.targetResponse = (sCode, hs) => { headers.response = toArray(hs); code = sCode; targetResponseTime = new Date().valueOf(); };
     this.end = () => { sourceResponseTime = new Date().valueOf(); monitor.log(generate())};
 }
 

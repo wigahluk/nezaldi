@@ -24,7 +24,6 @@ const proxy = tUrl => (req, res, trans) => {
     const path = /.*\/$/.test(tUrl) ? tUrl + 'index.html' : tUrl;
     const cType = contentType(path);
     trans = trans || dummyTrans;
-    console.log('static proxy', tUrl);
     fs.readFile(path, function (err, data) {
         if (err) {
             if(err.code == 'ENOENT'){

@@ -5,7 +5,7 @@
   },
   "rules": [
     {
-      "path": "^/$",
+      "path": "^/a$",
       "resetPath": true,
       "target": "http://localhost:4000/index.html"
     },
@@ -34,9 +34,15 @@
       "target": "./src/dashboard/build/"
     },
     {
-      "path": "^/static2/",
-      "target": "./src/dashboard/build/",
-      "resetPath": true
+      "path": "^/",
+      "target": "http://localhost:8000/src/dashboard/web/",
+      "removeHeaders": ["host"],
+      "addHeaders": [
+        {
+          "name": "host",
+          "value": "localhost:8000"
+        }
+      ]
     }
   ]
 }

@@ -21,6 +21,8 @@ atlassian-ide-plugin.xml
 # Generated or maanged sources
 /generated-sources/
 /node_modules/
+/elm-stuff
+elm-package.json
 
 # nezaldi
 /nezaldi.json
