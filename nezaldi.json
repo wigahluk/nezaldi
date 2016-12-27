@@ -35,7 +35,7 @@
     },
     {
       "path": "^/",
-      "target": "http://localhost:8000/src/dashboard/web/",
+      "target": "http://[::1]:8000/src/dashboard/web/",
       "removeHeaders": ["host"],
       "addHeaders": [
         {

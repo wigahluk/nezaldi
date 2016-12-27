@@ -85,6 +85,7 @@ Start the server from a `package.json` script:
 * `--conf` Configuration file to use, by default it will use `nezaldi.json`
 * `-p <port>` Sets the port for running Nezaldi. Default 3000. It can be specified in the configuration file.
 
+
 ### Global Configuration Settings
 
 * **debug** [Boolean] It will print information on the console on every request, including path, match and headers
@@ -114,6 +115,13 @@ in the original request, you can do so by adding them here.
 
 * **removeHeaders** [Key Value Map Array] In the case you need to remove some headers from the original request, 
 you can do so by adding them here.
+
+## Troubleshooting
+
+* Error `ECONNREFUSED` when trying to connect to a local server running in `localhost`. Some servers when running in localhost
+will not use the IPv4 address `127.0.0.1` which will be the one tried by NodeJS when the schema of the server is `localhost`.
+Before doing any change, verify that a curl call works using `localhost`, if it does, it is probable that your server is not using
+the IPv4 address but the IPv6 one. As a workaround you can change your target from something like `http://localhost:5555/a/b/c` to `http://[::1]:5555/a/b/c`.
 
 ## Dependencies
 
