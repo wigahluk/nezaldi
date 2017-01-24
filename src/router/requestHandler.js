@@ -3,7 +3,7 @@ const fProxy = require('./fileProxy');
 
 const applyPatterns = (rxMatches, path) => rxMatches
     .slice(1)
-    .reduce((p, fragment, idx) => p.replace('$' + (idx + 1), fragment), path);
+    .reduce((p, fragment, idx) => p.replace(new RegExp('\\$' + (idx + 1), 'g'), () => fragment), path);
 
 const extractPath = (originalPath, pathToRemove) => {
     if (originalPath.indexOf(pathToRemove) === 0) {

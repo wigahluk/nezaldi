@@ -1,3 +1,7 @@
+# 1.0.1
+
+Fixing multiple replacements
+
 # 1.0.0
 
 Tis version introduces a new **Dashboard** that developers can use for debugging.

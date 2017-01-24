@@ -53,6 +53,20 @@ describe('RequestHandler', () => {
         expect(t._redirect).toBe('http://a.com/n/m/x');
     });
 
+    it('Redirect with double replacement', () => {
+        const ruleDef = { path: '^/a/([^/]+)/b/([^/]+)/', redirect: 'http://a.com/$2/$1/$1/x' };
+        const rule = new Rule(ruleDef);
+        const rq = req('/a/m/b/n/');
+        const rs = res();
+        const t = trans();
+        const h = handler(rule.regex.exec(rq.url), rule);
+        h(rq, rs, t);
+        expect(rs._code).toBe(302);
+        expect(rs._end).toBe(true);
+        expect(t._end).toBe(true);
+        expect(t._redirect).toBe('http://a.com/n/m/m/x');
+    });
+
     it('Redirect with trailing path', () => {
         const ruleDef = { path: '^/abc/', redirect: 'http://a.com/' };
         const rule = new Rule(ruleDef);
