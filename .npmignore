@@ -23,6 +23,7 @@ atlassian-ide-plugin.xml
 /node_modules/
 /elm-stuff
 elm-package.json
+*.elm
 
 # nezaldi
 /nezaldi.json
