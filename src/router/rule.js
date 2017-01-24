@@ -1,4 +1,4 @@
-const RequestHandler = require('./requestHandler');
+const requestHandler = require('./requestHandler');
 
 function Rule (ruleDef) {
     const def = ruleDef || {};
@@ -22,9 +22,9 @@ Rule.prototype.match = function (request) {
         if (this.accept) {
             const accept = request.headers.accept.toLowerCase().split(',');
             const isSameAccept = accept.indexOf(this.accept.toLowerCase()) >= 0;
-            return isSameAccept ?  new RequestHandler(match, this, request) : undefined
+            return isSameAccept ?  requestHandler(match, this, request) : undefined
         }
-        return RequestHandler(match, this, request);
+        return requestHandler(match, this, request);
     }
 };
 

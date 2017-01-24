@@ -23,7 +23,7 @@ const req = (p) => {
     return { url: p};
 };
 
-describe('RequestHandler', () => {
+describe('requestHandler', () => {
 
     it('Simple Redirect', () => {
         const ruleDef = { path: '^/abc/?', redirect: 'http://a.com/' };
