@@ -1,5 +1,6 @@
 module MainView exposing (view)
 
+import MdlLayout exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Messages exposing (Msg)
@@ -32,13 +33,8 @@ cardContent children =
 
 container : List (Html msg) -> Html msg
 container children =
-    div [
-        style
-            [ "width" => "85%"
-            , "max-width" => "1280px"
-            , "margin" => "auto"
-            ]
-        ] children
+    layout [ layoutHeader "Nezaldi Dashboard"
+        , layoutContent children ]
 
 tCell : List (Html msg) -> Html msg
 tCell children =
@@ -65,10 +61,7 @@ tRow children =
 view : Nezaldi.TransactionSet -> Html Msg
 view model =
   container
-      [ h1 [] [text "Nezaldi"]
-      , hr [] []
-      , summary model
-      , hr [] []
+      [ summary model
       , h2 [] [text "Latest transactions"]
       , div [] (List.map transaction (List.reverse <| List.sortBy (\t -> t.times.sourceRequestTime) model.transactions))
       ]
@@ -88,6 +81,7 @@ transaction model =
         kvPair [] "Type" model.responseType,
         kvPair [] "Source" model.sourceUrl,
         kvPair [] "Target" model.targetUrl,
+        kvPair [] "RegEx" model.regex,
         div [] [
             h3 [] [text "Headers"],
             h4 [] [text "Sent from Client"],

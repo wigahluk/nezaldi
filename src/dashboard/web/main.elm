@@ -55,7 +55,7 @@ getTransactions model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Time.every second Tick
+  Time.every (2 * second) Tick
 
 -- VIEW
 

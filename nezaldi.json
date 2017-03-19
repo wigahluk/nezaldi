@@ -1,5 +1,5 @@
 {
-  "debug": true,
+  "debug": false,
   "dashboard": {
     "enable": true
   },
@@ -30,19 +30,21 @@
       "target": "http://localhost:4000/z/$1$2"
     },
     {
-      "path": "^/static/",
-      "target": "./src/dashboard/build/"
+      "path": "^/api",
+      "target": "http://localhost:3030/api/"
     },
     {
-      "path": "^/",
-      "target": "http://[::1]:8000/src/dashboard/web/",
-      "removeHeaders": ["host"],
-      "addHeaders": [
-        {
-          "name": "host",
-          "value": "localhost:8000"
-        }
-      ]
+      "path": "^/_reactor",
+      "target": "http://[::1]:8000/_reactor/"
+    },
+    {
+      "path": "^/elm.js$",
+      "target": "http://[::1]:8000/_compile/src/dashboard/web/main.elm"
+    },
+    {
+      "path": "^/$",
+      "target": "./src/dashboard/build/index.html",
+      "resetPath": true
     }
   ]
 }

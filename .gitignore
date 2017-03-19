@@ -22,6 +22,6 @@ atlassian-ide-plugin.xml
 /generated-sources/
 /node_modules/
 /elm-stuff
-src/dashboard/build
+/src/dashboard/build/elm.js
 # Tes configuration
 .nezaldi.json

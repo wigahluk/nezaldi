@@ -27,6 +27,7 @@ const newPath = (rxMatches, sourcePath, targetPath, resetPath) => {
 };
 
 const handler = (rxMatches, rule) => (req, res, trans) => {
+    trans.regex(rule.regex.toString());
     if (rule.redirect) {
         // Redirect calls
         const p = newPath(rxMatches, req.url, rule.redirect, rule.resetPath);

@@ -16,7 +16,7 @@ const toArray = obj => {
 
 function Monitor (dMode) {
     const debugMode = !!dMode;
-    const sizeLimit = 1000;
+    const sizeLimit = 100;
     const counters = { traffic: 0, errors: 0 };
     const transactions = [];
 
@@ -34,7 +34,7 @@ function Monitor (dMode) {
             count(trans);
             transactions.push(trans);
             if (transactions.length > sizeLimit) {
-                transactions.splice(1);
+                transactions.splice(0, 1);
             }
             log([
                 `Counts: traffic: ${counters.traffic}, errors: ${counters.errors}`,
@@ -53,7 +53,7 @@ Monitor.prototype.createTransaction = function (sourceUrl) {
 function Transaction (monitor, sourceUrl) {
     const sourceRequestTime = new Date().valueOf();
 
-    let code, targetUrl, sourceResponseTime, targetRequestTime, targetResponseTime, responseType;
+    let code, targetUrl, sourceResponseTime, targetRequestTime, targetResponseTime, responseType, regex;
     const headers = {};
 
     const generate = () => {
@@ -61,6 +61,7 @@ function Transaction (monitor, sourceUrl) {
             code: code || 504,
             sourceUrl: sourceUrl,
             targetUrl: targetUrl,
+            regex: regex,
             responseType: responseType || 'unknown',
             sourceRequestTime: sourceRequestTime,
             sourceResponseTime: sourceResponseTime,
@@ -72,6 +73,7 @@ function Transaction (monitor, sourceUrl) {
 
     this.transaction = generate;
     this.sourceHeaders = hs => { headers.source = toArray(hs); };
+    this.regex = rx => { regex = rx; };
     this.proxy = url => { targetUrl = url; responseType = 'proxy'; };
     this.local = url => { targetUrl = url; responseType = 'local'; };
     this.redirect = url => { code = 302; targetUrl = url; responseType = 'redirect'; };

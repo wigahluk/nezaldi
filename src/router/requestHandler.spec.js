@@ -8,6 +8,7 @@ const Rule = require('./rule');
 const trans = () => {
     return {
         redirect: function (path) { this._redirect = path; },
+        regex: function (s) { this._regex = s; },
         end: function () { this._end = true; }
     };
 };
@@ -37,6 +38,7 @@ describe('requestHandler', () => {
         expect(rs._end).toBe(true);
         expect(t._end).toBe(true);
         expect(t._redirect).toBe('http://a.com/');
+        expect(t._regex.toString()).toBe('/^\\/abc\\/?/i');
     });
 
     it('Redirect with replacements', () => {

@@ -1,13 +1,13 @@
 {
   "name": "nezaldi",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NodeJS proxy server intended to be used during development of SPAs that use APIs under the same domain.",
   "main": "./src/nezaldi.js",
   "scripts": {
     "start:proxy": "./bin/nezaldi",
     "start:dummy": "node ./src/dummyServer.js",
     "start:test": "npm run start:proxy & npm run start:dummy",
-    "build": "elm-make ./src/dashboard/web/main.elm --output=./src/dashboard/build/index.html",
+    "build": "elm-make ./src/dashboard/web/main.elm --output=./src/dashboard/build/elm.js",
     "test": "jasmine"
   },
   "repository": {
@@ -24,7 +24,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "jasmine": "2.4.1"
+    "jasmine": "2.5.3"
   },
   "bin": {
     "nezaldi": "./bin/nezaldi"

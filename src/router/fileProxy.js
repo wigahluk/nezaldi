@@ -9,6 +9,7 @@ const mimeTypes = {
     md: 'text/plain',
     jpg: 'image/jpeg',
     png: 'image/png',
+    svg: 'image/svg+xml',
     css: 'text/css'
 };
 
@@ -22,7 +23,7 @@ const dummyTrans = { targetResponse: function() {}, end: function() {} };
 
 const proxy = tUrl => (req, res, trans) => {
     const path = /.*\/$/.test(tUrl) ? tUrl + 'index.html' : tUrl;
-    const cType = contentType(path);
+    const cType = contentType(path) || 'application/octet-stream';
     trans = trans || dummyTrans;
     fs.readFile(path, function (err, data) {
         if (err) {

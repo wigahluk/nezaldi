@@ -21,6 +21,7 @@ type alias Transaction =
     , sourceUrl: String
     , targetUrl: String
     , responseType: String
+    , regex: String
     , times: TransactionTimes
     , headers: HeaderSet
     }
@@ -66,11 +67,12 @@ decodeTimes =
 
 decodeTransaction : Decode.Decoder Transaction
 decodeTransaction =
-    Decode.map6 Transaction
+    Decode.map7 Transaction
         (Decode.field "code" Decode.int)
         (Decode.field "sourceUrl" Decode.string)
         (Decode.field "targetUrl" Decode.string)
         (Decode.field "responseType" Decode.string)
+        (Decode.field "regex" Decode.string)
         decodeTimes
         (Decode.field "headers" decodeHeaderSet)
 
