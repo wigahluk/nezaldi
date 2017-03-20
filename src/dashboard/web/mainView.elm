@@ -77,6 +77,7 @@ summary model =
 transaction : Nezaldi.Transaction -> Html Msg
 transaction model =
     card [ cardContent [
+        kvPair [] "Id" (toString model.id),
         kvPair [] "Code" (toString model.code),
         kvPair [] "Type" model.responseType,
         kvPair [] "Source" model.sourceUrl,

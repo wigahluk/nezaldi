@@ -32,6 +32,7 @@ function Monitor (dMode) {
     this.log = (trans) => {
         if (trans && trans.code &&  trans.sourceUrl && trans.sourceRequestTime) {
             count(trans);
+            trans.id = counters.traffic;
             transactions.push(trans);
             if (transactions.length > sizeLimit) {
                 transactions.splice(0, 1);

@@ -2,10 +2,10 @@ module Hello exposing (..)
 
 import Html exposing (Html, text, h1)
 import Http
-import Json.Decode as Decode
 import Time exposing (Time, second)
 
 import Nezaldi
+import Decoders exposing (..)
 import Messages exposing (..)
 import MainView
 
@@ -47,7 +47,7 @@ getTransactions model =
       "/api/transactions"
 
     request =
-      Http.get url Nezaldi.decodeTransactionSet
+      Http.get url decodeTransactionSet
   in
     Http.send NewTransactions request
 

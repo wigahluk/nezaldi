@@ -1,10 +1,20 @@
+# 1.0.4
+
+* Adding ID to transactions in the log
+
+# 1.0.3
+
+* SVG MIME Type added
+* Style changes on the dashboard
+* The dashboard now shows the regex that caused the match
+
 # 1.0.1
 
 Fixing multiple replacements
 
 # 1.0.0
 
-Tis version introduces a new **Dashboard** that developers can use for debugging.
+This version introduces a new **Dashboard** that developers can use for debugging.
 
 ## Breaking Changes
 
