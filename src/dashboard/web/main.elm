@@ -21,24 +21,34 @@ main =
 
 type alias Model =
   { transactions: Nezaldi.TransactionSet
+  , viewState: MainView.ViewState
   }
 
 init : (Model, Cmd Msg)
-init =
-  ({ transactions = Nezaldi.emptySet }, Cmd.none)
+init = (
+    { transactions = Nezaldi.emptySet
+    , viewState = MainView.initialState
+    }
+    , Cmd.none
+    )
 
 -- UPDATE
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Tick t ->
-      (model, getTransactions model)
-    NewTransactions (Ok newTrans) ->
-      ({ model | transactions = newTrans }, Cmd.none)
-    NewTransactions (Err _) ->
-      (model, Cmd.none)
+      Tick t ->
+        (model, getTransactions model)
+      NewTransactions (Ok newTrans) ->
+        ({ model | transactions = newTrans }, Cmd.none)
+      NewTransactions (Err _) ->
+        (model, Cmd.none)
+      Select selected ->
+        ({ model | viewState = selectTrans selected model.viewState }, Cmd.none)
 
+selectTrans : Int -> MainView.ViewState -> MainView.ViewState
+selectTrans i viewState =
+    { viewState | selected = Just i }
 
 getTransactions : Model -> Cmd Msg
 getTransactions model =
@@ -61,5 +71,5 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  MainView.view model.transactions
+  MainView.view model.transactions model.viewState
 

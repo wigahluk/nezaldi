@@ -14,7 +14,7 @@ layout children =
 layoutHeader : String -> Html msg
 layoutHeader title =
     header [
-        class "mdl-layout__header"
+        class "mdl-layout__header headerBar"
         ] [
             div [
                 class "mdl-layout__header-row"
@@ -41,3 +41,26 @@ layoutContent children =
                 children
             ]
         ]
+
+fatList : List (Html msg) -> Html msg
+fatList children =
+    div [
+        style
+            [ "position" => "relative"
+            , "margin" => "0.5rem 0 1rem 0"
+            ]
+        ] children
+
+fatListItem : List (Attribute msg) -> List (Html msg) -> Html msg
+fatListItem attributes children =
+    div attributes [
+        div [
+            style
+                [ "position" => "relative"
+                , "background-color" => "#ffffff"
+                , "border-bottom" => "1px solid rgba(0,0,0,0.2)"
+                , "background-color" => "#ffffff"
+                , "transition" => "box-shadow .25s"
+                , "box-shadow" => "0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)"
+                ]
+            ] children ]
