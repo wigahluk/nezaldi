@@ -22,12 +22,14 @@ main =
 type alias Model =
   { transactions: Nezaldi.TransactionSet
   , viewState: MainView.ViewState
+  , error: Maybe Http.Error
   }
 
 init : (Model, Cmd Msg)
 init = (
     { transactions = Nezaldi.emptySet
     , viewState = MainView.initialState
+    , error = Nothing
     }
     , Cmd.none
     )
@@ -41,8 +43,8 @@ update msg model =
         (model, getTransactions model)
       NewTransactions (Ok newTrans) ->
         ({ model | transactions = newTrans }, Cmd.none)
-      NewTransactions (Err _) ->
-        (model, Cmd.none)
+      NewTransactions (Err e) ->
+        ({ model | error = Just e }, Cmd.none)
       Select selected ->
         ({ model | viewState = selectTrans selected model.viewState }, Cmd.none)
 

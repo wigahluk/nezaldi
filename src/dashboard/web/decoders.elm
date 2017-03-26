@@ -1,6 +1,6 @@
 module Decoders exposing (decodeTransactionSet)
 
-import Json.Decode as Decode exposing (..)
+import Json.Decode exposing (..)
 import Maybe
 import Nezaldi exposing (..)
 
@@ -13,14 +13,14 @@ listToHeader list =
         a::_ -> Nothing
         [] -> Nothing
 
-decodeHeaderSet : Decode.Decoder HeaderSet
+decodeHeaderSet : Decoder HeaderSet
 decodeHeaderSet =
-    Decode.map3 HeaderSet
-            (Decode.field "source" decodeHeaderList)
-            (Decode.field "target" decodeHeaderList)
-            (Decode.field "response" decodeHeaderList)
+    map3 HeaderSet
+            (field "source" decodeHeaderList)
+            (maybe <| field "target" decodeHeaderList)
+            (maybe <| field "response" decodeHeaderList)
 
-decodeHeaderList : Decode.Decoder HeaderList
+decodeHeaderList : Decoder HeaderList
 decodeHeaderList =
     let
         sequence : List (Maybe a) -> List a
@@ -29,35 +29,35 @@ decodeHeaderList =
                 [] -> []
                 (Just x)::t -> x :: (sequence t)
                 Nothing ::t -> sequence t
-    in map sequence (Decode.list decodeHeader)
+    in map sequence (list decodeHeader)
 
-decodeHeader : Decode.Decoder (Maybe Header)
+decodeHeader : Decoder (Maybe Header)
 decodeHeader =
-    map listToHeader (Decode.list Decode.string)
+    map listToHeader (list string)
 
-decodeTimes : Decode.Decoder TransactionTimes
+decodeTimes : Decoder TransactionTimes
 decodeTimes =
-    Decode.map4 TransactionTimes
-        (Decode.field "sourceRequestTime" Decode.int)
-        (Decode.field "sourceResponseTime" Decode.int)
-        (Decode.field "targetRequestTime" Decode.int)
-        (Decode.field "targetResponseTime" Decode.int)
+    map4 TransactionTimes
+        (field "sourceRequestTime" int)
+        (field "sourceResponseTime" int)
+        (maybe <| field "targetRequestTime" int)
+        (maybe <| field "targetResponseTime" int)
 
-decodeTransaction : Decode.Decoder Transaction
+decodeTransaction : Decoder Transaction
 decodeTransaction =
-    Decode.map8 Transaction
-        (Decode.field "id" Decode.int)
-        (Decode.field "code" Decode.int)
-        (Decode.field "sourceUrl" Decode.string)
-        (Decode.field "targetUrl" Decode.string)
-        (Decode.field "responseType" Decode.string)
-        (Decode.field "regex" Decode.string)
+    map8 Transaction
+        (field "id" int)
+        (field "code" int)
+        (field "sourceUrl" string)
+        (maybe <| field "targetUrl" string)
+        (field "responseType" string)
+        (maybe <| field "regex" string)
         decodeTimes
-        (Decode.field "headers" decodeHeaderSet)
+        (field "headers" decodeHeaderSet)
 
-decodeTransactionSet : Decode.Decoder TransactionSet
+decodeTransactionSet : Decoder TransactionSet
 decodeTransactionSet =
-    Decode.map3 TransactionSet
-        (Decode.field "traffic" Decode.int)
-        (Decode.field "errors" Decode.int)
-        (Decode.field "transactions" (Decode.list decodeTransaction))
+    map3 TransactionSet
+        (field "traffic" int)
+        (field "errors" int)
+        (field "transactions" (list decodeTransaction))

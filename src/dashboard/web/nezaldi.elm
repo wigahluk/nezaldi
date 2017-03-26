@@ -16,17 +16,17 @@ type alias HeaderList = List Header
 
 type alias HeaderSet =
     { source: HeaderList
-    , target: HeaderList
-    , response: HeaderList
+    , target: Maybe HeaderList
+    , response: Maybe HeaderList
     }
 
 type alias Transaction =
     { id: Int
     , code: Int
     , sourceUrl: String
-    , targetUrl: String
+    , targetUrl: Maybe String
     , responseType: String
-    , regex: String
+    , regex: Maybe String
     , times: TransactionTimes
     , headers: HeaderSet
     }
@@ -34,8 +34,8 @@ type alias Transaction =
 type alias TransactionTimes =
     { sourceRequestTime: Int
     , sourceResponseTime: Int
-    , targetRequestTime: Int
-    , targetResponseTime: Int
+    , targetRequestTime: Maybe Int
+    , targetResponseTime: Maybe Int
     }
 
 type alias TransactionSet =

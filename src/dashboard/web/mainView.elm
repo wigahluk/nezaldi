@@ -1,6 +1,7 @@
 module MainView exposing (view, ViewState, initialState)
 
 import MdlLayout exposing (..)
+import LogView exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
@@ -31,15 +32,6 @@ card children =
             , "border-radius" => "2px"
             , "background-color" => "#ffffff"
             , "box-shadow" => "0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)"
-            ]
-        ] children
-
-cardContent : List (Html msg) -> Html msg
-cardContent children =
-    div [
-        style
-            [ "padding" => "20px"
-            , "border-radius" => "0 0 2px 2px"
             ]
         ] children
 
@@ -82,8 +74,8 @@ summary : Nezaldi.TransactionSet -> Html Msg
 summary model =
     card [ cardContent [
             h2 [] [text "Sumary"],
-            kvPair [] "Total Trafic" ( toString model.traffic ),
-            kvPair [] "Total Errors" ( toString model.errors )
+            kvPair [] "Total Trafic" (Just <| toString model.traffic ),
+            kvPair [] "Total Errors" (Just <| toString model.errors )
         ]]
 
 thinOrFat : Maybe Int -> Nezaldi.Transaction -> Html Msg
@@ -97,9 +89,9 @@ thinOrFat selected =
 thinTransaction : Nezaldi.Transaction -> Html Msg
 thinTransaction model =
     fatListItem [ onClick <| Messages.Select model.id ] [ cardContent [
-            kvPair [] "Code" (toString model.code),
-            kvPair [] "Type" model.responseType,
-            kvPair [] "Source" model.sourceUrl
+            statusCode model.code,
+            responseType model.responseType,
+            sourcePath model.sourceUrl
         ]]
 
 fatTransaction : Nezaldi.Transaction -> Html Msg
@@ -110,9 +102,9 @@ fatTransaction model =
             "margin" => "1rem 0 1rem 0"
             ]
         ] [ cardContent [
-        kvPair [] "Code" (toString model.code),
-        kvPair [] "Type" model.responseType,
-        kvPair [] "Source" model.sourceUrl,
+        transactionHeader model,
+        kvPair [] "Type" (Just model.responseType),
+        kvPair [] "Source" (Just  model.sourceUrl),
         kvPair [] "Target" model.targetUrl,
         kvPair [] "RegEx" model.regex,
         div [] [
@@ -130,9 +122,11 @@ fatTransaction model =
         ]
     ]]
 
-kvPair : List (Attribute Msg) -> String -> String -> Html Msg
+kvPair : List (Attribute Msg) -> String -> Maybe String -> Html Msg
 kvPair attrs name value =
-    tRow [
-        tCell [text name],
-        tCell [text value]
-    ]
+    case value of
+        Nothing -> div [] []
+        Just v -> tRow [
+                    tCell [text name],
+                    tCell [text v]
+                    ]

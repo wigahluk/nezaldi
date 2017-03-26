@@ -1,3 +1,7 @@
+# 1.0.6
+
+* Fixing decoding issue on the dashboard that prevented render if an error response was in the transactions set
+
 # 1.0.4
 
 * Adding ID to transactions in the log
