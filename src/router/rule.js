@@ -20,7 +20,7 @@ Rule.prototype.match = function (request) {
     const match = this.regex.exec(request.url);
     if (match) {
         if (this.accept) {
-            const accept = request.headers.accept.toLowerCase().split(',');
+            const accept = (request.headers.accept || '').toLowerCase().split(',');
             const isSameAccept = accept.indexOf(this.accept.toLowerCase()) >= 0;
             return isSameAccept ?  requestHandler(match, this, request) : undefined
         }
