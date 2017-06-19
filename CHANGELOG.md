@@ -1,3 +1,11 @@
+# 1.0.8
+
+* Fixing a security vulnerability where the Dashboard server was allowing _dotdot_ paths. Now a path with `../` as part of it will respond as a `404`
+
+# 1.0.7
+
+* Fixing an issue where a missing `Accept` header was casing an error on the response
+
 # 1.0.6
 
 * Fixing decoding issue on the dashboard that prevented render if an error response was in the transactions set
